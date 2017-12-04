@@ -31,8 +31,8 @@ int main(int argc, char* argv[])
         input02_filename = argv[2];
     }
 
-    auto input01 = readInput(input01_filename);
-    auto input02 = readInput(input02_filename);
+    auto const input01 = readInput(input01_filename);
+    auto const input02 = readInput(input02_filename);
 
     if(!input01 || !input02) {
         return 1;
