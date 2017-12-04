@@ -15,8 +15,12 @@ public:
 
 using DigitSequence = std::vector<Digit>;
 
+Digit const& cyclic_access(DigitSequence const& s, std::size_t index);
+
 DigitSequence parseInput(std::string_view str);
 
 int solveCaptcha(DigitSequence const& input);
+
+int solveCaptcha2(DigitSequence const& input);
 
 #endif

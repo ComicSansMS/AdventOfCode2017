@@ -23,6 +23,11 @@ DigitSequence parseInput(std::string_view str)
     return ret;
 }
 
+Digit const& cyclic_access(DigitSequence const& s, std::size_t index)
+{
+    return s[index % s.size()];
+}
+
 int solveCaptcha(DigitSequence const& input)
 {
     int acc = 0;
@@ -33,6 +38,18 @@ int solveCaptcha(DigitSequence const& input)
 
         if(it->get() == it_next->get()) {
             acc += it->get();
+        }
+    }
+    return acc;
+}
+
+int solveCaptcha2(DigitSequence const& input)
+{
+    auto const length = input.size();
+    int acc = 0;
+    for(std::size_t i = 0; i < length; ++i) {
+        if(input[i].get() == cyclic_access(input, i + length/2).get()) {
+            acc += input[i].get();
         }
     }
     return acc;
