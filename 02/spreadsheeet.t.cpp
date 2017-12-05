@@ -28,3 +28,20 @@ TEST_CASE("Spreadsheet")
         CHECK(calculateSpreadChecksum(spread) == 18);
     }
 }
+
+TEST_CASE("Spreadsheet Even Divide")
+{
+    char const* input = "5 9 2 8\n9 4 7 3\n3 8 6 5";
+    auto spread = parseInput(input);
+    SECTION("Row Even Divide")
+    {
+        CHECK(calculateRowEvenDivide(spread, 0) == 4);
+        CHECK(calculateRowEvenDivide(spread, 1) == 3);
+        CHECK(calculateRowEvenDivide(spread, 2) == 2);
+    }
+
+    SECTION("Checksum Even Divide")
+    {
+        CHECK(calculateSpreadChecksumEvenDivide(spread) == 9);
+    }
+}

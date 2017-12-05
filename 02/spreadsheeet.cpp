@@ -55,3 +55,30 @@ int calculateSpreadChecksum(Spreadsheet const& spread)
     }
     return acc;
 }
+
+int calculateRowEvenDivide(Spreadsheet const& spread, std::size_t row_index)
+{
+    auto row = spread.row(row_index);
+    for(std::size_t i = 0; i < row.size(); ++i) {
+        int n1 = row[i];
+        for(std::size_t j = 0; j < row.size(); ++j) {
+            if(i != j) {
+                int n2 = row[j];
+                if((n1 > n2) && (n1 % n2 == 0)) {
+                    return n1 / n2;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int calculateSpreadChecksumEvenDivide(Spreadsheet const& spread)
+{
+    int acc = 0;
+    for(std::size_t i = 0; i < spread.numberOfRows(); ++i)
+    {
+        acc += calculateRowEvenDivide(spread, i);
+    }
+    return acc;
+}

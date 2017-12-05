@@ -20,4 +20,8 @@ int calculateRowDifference(Spreadsheet const& spread, std::size_t row_index);
 
 int calculateSpreadChecksum(Spreadsheet const& spread);
 
+int calculateRowEvenDivide(Spreadsheet const& spread, std::size_t row_index);
+
+int calculateSpreadChecksumEvenDivide(Spreadsheet const& spread);
+
 #endif

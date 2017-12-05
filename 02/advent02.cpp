@@ -36,13 +36,9 @@ int main(int argc, char* argv[])
     }
     auto const result01 = calculateSpreadChecksum(parseInput(*input));
     std::cout << "First result is " << result01 << std::endl;
-    /*
-    auto const input02 = readInput(input02_filename);
-    if(!input02) {
-        return 1;
-    }
-    auto const result02 = solveCaptcha2(parseInput(*input02));
+
+    auto const result02 = calculateSpreadChecksumEvenDivide(parseInput(*input));
     std::cout << "Second result is " << result02 << std::endl;
-    */
+
     return 0;
 }
