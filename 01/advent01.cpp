@@ -24,24 +24,21 @@ std::optional<std::string> readInput(char const* filename)
 
 int main(int argc, char* argv[])
 {
-    char const* input01_filename = "input01";
-    char const* input02_filename = "input02";
-    if(argc == 3) {
-        input01_filename = argv[1];
-        input02_filename = argv[2];
+    char const* input_filename = "input";
+    if(argc == 2) {
+        input_filename = argv[1];
     }
 
-    auto const input01 = readInput(input01_filename);
-    auto const input02 = readInput(input02_filename);
+    auto const input = readInput(input_filename);
 
-    if(!input01 || !input02) {
+    if(!input) {
         return 1;
     }
 
-    auto const result01 = solveCaptcha(parseInput(*input01));
+    auto const result01 = solveCaptcha(parseInput(*input));
     std::cout << "First result is " << result01 << std::endl;
 
-    auto const result02 = solveCaptcha2(parseInput(*input02));
+    auto const result02 = solveCaptcha2(parseInput(*input));
     std::cout << "Second result is " << result02 << std::endl;
     return 0;
 }
