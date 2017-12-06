@@ -47,5 +47,13 @@ int main(int argc, char* argv[])
     }
     std::cout << "First result is " << valid_phrases << std::endl;
 
+    valid_phrases = 0;
+    for(auto const& passphrase : *input) {
+        if(!hasAnagrams(passphrase)) {
+            ++valid_phrases;
+        }
+    }
+    std::cout << "Second result is " << valid_phrases << std::endl;
+
     return 0;
 }

@@ -31,4 +31,13 @@ TEST_CASE("Passphrase")
         CHECK(hasDuplicates("aa bb cc dd aa"));
         CHECK(!hasDuplicates("aa bb cc dd aaa"));
     }
+
+    SECTION("Check for anagrams")
+    {
+        CHECK(!hasAnagrams("abcde fghij"));
+        CHECK(hasAnagrams("abcde xyz ecdab"));
+        CHECK(!hasAnagrams("a ab abc abd abf abj"));
+        CHECK(!hasAnagrams("iiii oiii ooii oooi oooo"));
+        CHECK(hasAnagrams("oiii ioii iioi iiio"));
+    }
 }

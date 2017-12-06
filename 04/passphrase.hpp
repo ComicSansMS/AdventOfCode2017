@@ -8,4 +8,6 @@ void iteratePassphrase(std::string_view passphrase, std::function<void(std::stri
 
 bool hasDuplicates(std::string_view passphrase);
 
+bool hasAnagrams(std::string_view passphrase);
+
 #endif
