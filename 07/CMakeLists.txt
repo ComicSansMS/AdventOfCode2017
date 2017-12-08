@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.9)
+
+project(advent07)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_library(program_tree STATIC program_tree.hpp program_tree.cpp)
+target_include_directories(program_tree PUBLIC ${PROJECT_SOURCE_DIR})
+add_executable(advent07 advent07.cpp)
+target_link_libraries(advent07 PUBLIC program_tree)
+
+target_compile_options(advent07 PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
+target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/permissive->)
+target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/std:c++latest>)
+
+file(COPY input DESTINATION ${PROJECT_BINARY_DIR})
+
+if(TARGET Catch)
+    add_executable(program_tree_test program_tree.t.cpp)
+    target_link_libraries(program_tree_test PUBLIC Catch program_tree)
+    add_test(NAME TestAdvent07 COMMAND program_tree_test)
+endif()
