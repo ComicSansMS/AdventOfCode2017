@@ -9,6 +9,7 @@ struct Program {
     int weight;
     std::string name;
     std::vector<std::string> dependencies;
+    std::vector<int> dep_indices;
     std::string parent;
     int total_weight;
 };

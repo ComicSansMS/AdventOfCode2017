@@ -48,9 +48,11 @@ void determineParents(std::vector<Program>& programs)
         name_to_index[programs[i].name] = i;
     }
 
-    for(auto const& p : programs) {
+    for(auto& p : programs) {
         for(auto const& d : p.dependencies) {
-            auto& dep_program = programs[name_to_index[d]];
+            int const dep_index = name_to_index[d];
+            p.dep_indices.push_back(dep_index);
+            auto& dep_program = programs[dep_index];
             assert(dep_program.parent.empty());
             dep_program.parent = p.name;
         }
@@ -65,17 +67,14 @@ int findRoot(std::vector<Program>& programs)
 }
 
 int calculateNodeWeight(std::vector<Program>& programs,
-                        std::unordered_map<std::string, int>& name_to_index,
                         int node_index)
 {
     auto& node = programs[node_index];
     int child_weights_acc = 0;
-    for(auto const& c : node.dependencies) {
-        assert(name_to_index.find(c) != end(name_to_index));
-        int const child_index = name_to_index[c];
-        auto& child = programs[child_index];
+    for(auto const& c : node.dep_indices) {
+        auto& child = programs[c];
         if(child.total_weight == 0) {
-            child.total_weight = calculateNodeWeight(programs, name_to_index, child_index);
+            child.total_weight = calculateNodeWeight(programs, c);
         }
         child_weights_acc += child.total_weight;
     }
@@ -84,25 +83,19 @@ int calculateNodeWeight(std::vector<Program>& programs,
 
 void calculateTotalWeights(std::vector<Program>& programs)
 {
-    std::unordered_map<std::string, int> name_to_index;
-    for(int i=0; i<programs.size(); ++i) {
-        name_to_index[programs[i].name] = i;
-    }
-
     int root = findRoot(programs);
-    int root_weight = calculateNodeWeight(programs, name_to_index, root);
+    int root_weight = calculateNodeWeight(programs, root);
     programs[root].total_weight = root_weight;
 }
 
 bool childrenAreBalanced(std::vector<Program> const& programs,
-                         std::unordered_map<std::string, int>& name_to_index,
                          int node_index)
 {
     auto const& node = programs[node_index];
     int expected_weight = 0;
     bool is_first = true;
-    for(auto const& c : node.dependencies) {
-        auto& child = programs[name_to_index[c]];
+    for(auto const& c : node.dep_indices) {
+        auto& child = programs[c];
         if(is_first) { expected_weight = child.total_weight; is_first = false; }
         if(child.total_weight != expected_weight) { return false; }
     }
@@ -111,21 +104,16 @@ bool childrenAreBalanced(std::vector<Program> const& programs,
 
 int findWeightMismatch(std::vector<Program> const& programs)
 {
-    std::unordered_map<std::string, int> name_to_index;
     for(int i=0; i<programs.size(); ++i) {
-        name_to_index[programs[i].name] = i;
-    }
-
-    for(int i=0; i<programs.size(); ++i) {
-        if(!childrenAreBalanced(programs, name_to_index, i)) {
+        if(!childrenAreBalanced(programs, i)) {
             auto& node = programs[i];
-            bool all_grandchildren_balanced = std::all_of(begin(node.dependencies), end(node.dependencies),
-                [&](std::string const& c) { return childrenAreBalanced(programs, name_to_index, name_to_index[c]); });
+            bool all_grandchildren_balanced = std::all_of(begin(node.dep_indices), end(node.dep_indices),
+                [&](int c) { return childrenAreBalanced(programs, c); });
             if(all_grandchildren_balanced) {
                 // found defective node: one of our children is wrong
                 std::vector<Program> children;
-                for(auto const& c : node.dependencies) {
-                    children.push_back(programs[name_to_index[c]]);
+                for(auto const& c : node.dep_indices) {
+                    children.push_back(programs[c]);
                 }
                 assert(children.size() > 2);
 
@@ -144,9 +132,13 @@ int findWeightMismatch(std::vector<Program> const& programs)
                     }
                 }
 
-                auto& odds_children = children[odd_one].dependencies;
-                int childrens_weight = programs[name_to_index[odds_children.front()]].total_weight * static_cast<int>(odds_children.size());
+                // all children are balanced; so the total weight of all children
+                // is equal to weight of one child times number of children
+                auto& odds_children = children[odd_one].dep_indices;
+                int const childrens_weight =
+                    programs[odds_children.front()].total_weight * static_cast<int>(odds_children.size());
 
+                // our weight plus the childrens weight should sum up to the correct weight
                 return std::abs(correct_weight - childrens_weight);
             }
         }

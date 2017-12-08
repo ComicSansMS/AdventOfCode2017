@@ -45,8 +45,11 @@ cntj (57)
     {
         determineParents(programs);
         CHECK(programs[0].parent == "padx");
+        CHECK(programs[0].dep_indices.empty());
         CHECK(programs[1].parent == "fwft");
         CHECK(programs[10].parent == "tknk");
+        REQUIRE(programs[10].dep_indices.size() == 3);
+        CHECK(programs[10].dep_indices == std::vector<int>{ 11, 2, 9 });
         int root = findRoot(programs);
         CHECK(programs[root].name == "tknk");
     }
