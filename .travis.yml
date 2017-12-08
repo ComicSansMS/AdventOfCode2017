@@ -61,4 +61,9 @@ script:
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build
   - 01/advent01 01/input
+  - 02/advent01 02/input
+  - 03/advent01 03/input
+  - 04/advent01 04/input
+  - 05/advent01 05/input
+  - 06/advent01 06/input
 
