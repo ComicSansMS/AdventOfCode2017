@@ -57,4 +57,4 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
   - cd build
   - ctest -C Debug
-  - find .
+  - ls -R ${TRAVIS_BUILD_DIR}
