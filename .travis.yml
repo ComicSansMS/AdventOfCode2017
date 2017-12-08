@@ -57,3 +57,4 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
   - cd build
   - ctest -C Debug
+  - tree -fi
