@@ -41,5 +41,9 @@ int main(int argc, char* argv[])
 
     std::cout << "First result is: " << programs[findRoot(programs)].name << std::endl;
 
+    calculateTotalWeights(programs);
+
+    std::cout << "Second result is: " << findWeightMismatch(programs) << std::endl;
+
     return 0;
 }

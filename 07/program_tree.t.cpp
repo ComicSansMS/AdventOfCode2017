@@ -26,15 +26,15 @@ cntj (57)
     {
         REQUIRE(programs.size() == 13);
         CHECK(programs[0].name == "pbga");
-        CHECK(programs[0].id == 66);
+        CHECK(programs[0].weight == 66);
         CHECK(programs[0].dependencies.empty());
 
         CHECK(programs[12].name == "cntj");
-        CHECK(programs[12].id == 57);
+        CHECK(programs[12].weight == 57);
         CHECK(programs[12].dependencies.empty());
 
         CHECK(programs[5].name == "fwft");
-        CHECK(programs[5].id == 72);
+        CHECK(programs[5].weight == 72);
         REQUIRE(programs[5].dependencies.size() == 3);
         CHECK(programs[5].dependencies[0] == "ktlj");
         CHECK(programs[5].dependencies[1] == "cntj");
@@ -49,5 +49,26 @@ cntj (57)
         CHECK(programs[10].parent == "tknk");
         int root = findRoot(programs);
         CHECK(programs[root].name == "tknk");
+    }
+
+    SECTION("Determine node weights")
+    {
+        determineParents(programs);
+        calculateTotalWeights(programs);
+        CHECK(programs[0].total_weight == 66);
+        CHECK(programs[1].total_weight == 57);
+        CHECK(programs[2].total_weight == 61);
+        CHECK(programs[5].total_weight == 243);
+        CHECK(programs[7].total_weight == 243);
+        CHECK(programs[10].total_weight == 251);
+
+        CHECK(programs[findRoot(programs)].total_weight == 778);
+    }
+
+    SECTION("Find weight mismatch")
+    {
+        determineParents(programs);
+        calculateTotalWeights(programs);
+        CHECK(findWeightMismatch(programs) == 60);
     }
 }

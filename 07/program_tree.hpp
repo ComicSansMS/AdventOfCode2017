@@ -6,10 +6,11 @@
 #include <vector>
 
 struct Program {
-    int id;
+    int weight;
     std::string name;
     std::vector<std::string> dependencies;
     std::string parent;
+    int total_weight;
 };
 
 std::vector<Program> parseInput(std::string_view input);
@@ -17,6 +18,10 @@ std::vector<Program> parseInput(std::string_view input);
 void determineParents(std::vector<Program>& programs);
 
 int findRoot(std::vector<Program>& programs);
+
+void calculateTotalWeights(std::vector<Program>& programs);
+
+int findWeightMismatch(std::vector<Program> const& programs);
 
 
 #endif
