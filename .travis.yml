@@ -63,6 +63,7 @@ after_success:
   - |
     for i in `seq 1 7`;
     do
+      echo Result for day 0$i:
       cd 0$i
       ./advent0$i input
       cd ..
