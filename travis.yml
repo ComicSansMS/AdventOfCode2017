@@ -1,0 +1,59 @@
+language: cpp
+os: linux # Use Linux unless specified otherwise
+dist: precise # Use precise unless specified otherwise
+sudo: false
+
+matrix:
+  include:
+    - env: COMPILER=clang++-4.0
+      addons: { apt: { packages: ["clang-4.0"], sources: ["llvm-toolchain-trusty-4.0", "ubuntu-toolchain-r-test"] } }
+
+    - env: COMPILER=g++-7
+      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
+      dist: trusty
+
+install:
+  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+  - ${CXX} --version
+
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+
+  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
+  - md5sum -c cmake_md5.txt
+  - tar -xvf cmake-3.3.2-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.3.2-Linux-x86_64 cmake-install
+  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+  - which cmake
+  - cmake --version
+
+  - |
+    if [[ "${CXX%%+*}" == "clang" ]]; then
+      if [[ "${CXX}" == "clang++-4.0" ]]; then LLVM_VERSION="4.0.0";
+      fi
+      LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+      LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+      LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+      mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+      travis_retry wget -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm
+      travis_retry wget -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx
+      travis_retry wget -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi
+      (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install)
+      (cd llvm/build/projects/libcxx && make install -j2)
+      (cd llvm/build/projects/libcxxabi && make install -j2)
+      export CXXFLAGS="-isystem ${DEPS_DIR}/llvm/install/include/c++/v1"
+      export LDFLAGS="-L ${DEPS_DIR}/llvm/install/lib -l c++ -l c++abi"
+      export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/install/lib"
+    fi
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake --build . --target ALL_BUILD
+
+script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - cd build
+  - ctest -C Debug
