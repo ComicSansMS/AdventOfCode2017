@@ -57,3 +57,8 @@ script:
   - cd ${TRAVIS_BUILD_DIR}
   - cd build
   - ctest -C Debug
+
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}/build
+  - 01/advent01 01/input
+
