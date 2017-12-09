@@ -68,5 +68,8 @@ after_success:
       ./advent0$i input
       cd ..
     done
-  - cmake --build . --target coverage
-  - bash <(curl -s https://codecov.io/bash)
+  - |
+    if [[ "${CXX}" == "g++-7" ]]; then
+        cmake --build . --target coverage
+        bash <(curl -s https://codecov.io/bash)
+    fi
