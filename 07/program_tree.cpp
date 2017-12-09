@@ -45,7 +45,7 @@ std::vector<Program> parseInput(std::string_view input)
 void determineParents(std::vector<Program>& programs)
 {
     std::unordered_map<std::string, int> name_to_index;
-    for(int i=0; i<programs.size(); ++i) {
+    for(std::size_t i=0; i<static_cast<int>(programs.size()); ++i) {
         name_to_index[programs[i].name] = i;
     }
 
@@ -106,7 +106,7 @@ bool childrenAreBalanced(std::vector<Program> const& programs,
 int findWeightMismatch(std::vector<Program> const& programs)
 {
     std::optional<int> ret;
-    for(int i=0; i<programs.size(); ++i) {
+    for(std::size_t i=0; i<programs.size(); ++i) {
         if(!childrenAreBalanced(programs, i)) {
             auto& node = programs[i];
             bool all_grandchildren_balanced = std::all_of(begin(node.dep_indices), end(node.dep_indices),
@@ -121,7 +121,7 @@ int findWeightMismatch(std::vector<Program> const& programs)
 
                 int correct_weight = children.front().total_weight;
                 int odd_one = -1;
-                for(int j=1; j<children.size(); ++j) {
+                for(std::size_t j=1; j<children.size(); ++j) {
                     if(children[j].total_weight != correct_weight) {
                         if(odd_one == -1) {
                             odd_one = j;

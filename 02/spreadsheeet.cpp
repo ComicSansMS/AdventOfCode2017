@@ -19,7 +19,7 @@ std::size_t Spreadsheet::numberOfRows() const
 
 std::vector<int> Spreadsheet::row(std::size_t row_index) const
 {
-    assert(row_index >= 0 && row_index < numberOfRows());
+    assert(row_index < numberOfRows());
     return m_spread[row_index];
 }
 

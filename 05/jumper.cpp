@@ -1,5 +1,7 @@
 #include <jumper.hpp>
 
+#include <cassert>
+#include <limits>
 #include <sstream>
 #include <string>
 
@@ -20,7 +22,8 @@ int runJumperVM(std::vector<int>& tape)
 {
     int pc = 0;
     int steps = 0;
-    while((pc >= 0) && (pc < tape.size())) {
+    assert(tape.size() <= std::numeric_limits<int>::max());
+    while((pc >= 0) && (pc < static_cast<int>(tape.size()))) {
         int const jump = tape[pc];
         ++tape[pc];
         pc += jump;
@@ -33,7 +36,8 @@ int runStrangeJumperVM(std::vector<int>& tape)
 {
     int pc = 0;
     int steps = 0;
-    while((pc >= 0) && (pc < tape.size())) {
+    assert(tape.size() <= std::numeric_limits<int>::max());
+    while((pc >= 0) && (pc < static_cast<int>(tape.size()))) {
         int const jump = tape[pc];
         if(jump >= 3) { --tape[pc]; } else { ++tape[pc]; }
         pc += jump;
