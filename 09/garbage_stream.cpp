@@ -73,11 +73,6 @@ void StateMachine::decreaseGroupDepth()
     if(m_groupDepth == 0) { m_state = Empty{}; }
 }
 
-int StateMachine::getGroupDepth() const
-{
-    return m_groupDepth;
-}
-
 int StateMachine::getScore() const
 {
     return m_score;

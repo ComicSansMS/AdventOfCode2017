@@ -37,7 +37,6 @@ public:
 
     void increaseGroupDepth();
     void decreaseGroupDepth();
-    int getGroupDepth() const;
 
     int getScore() const;
 

@@ -43,6 +43,12 @@ TEST_CASE("Garbage Stream")
         CHECK(sm9.getScore() == 3);
     }
 
+    SECTION("Invalid streams")
+    {
+        CHECK_THROWS_AS(parseStream("<>"), unexpected_token);
+        CHECK_THROWS_AS(parseStream("{>}"), unexpected_token);
+    }
+
     SECTION("Count Garbage")
     {
         auto sm1 = parseStream("{<>}");
