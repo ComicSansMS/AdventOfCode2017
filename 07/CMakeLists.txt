@@ -7,7 +7,7 @@ target_compile_options(advent07 PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
 target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/permissive->)
 target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/std:c++latest>)
 
-file(COPY input DESTINATION ${PROJECT_BINARY_DIR})
+file(COPY input DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(TARGET Catch)
     add_executable(program_tree_test program_tree.t.cpp)
