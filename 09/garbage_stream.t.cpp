@@ -45,6 +45,7 @@ TEST_CASE("Garbage Stream")
 
     SECTION("Invalid streams")
     {
+        CHECK(std::string_view(unexpected_token{}.what()).compare("unexpected token") == 0);
         CHECK_THROWS_AS(parseStream("<>"), unexpected_token);
         CHECK_THROWS_AS(parseStream("{>}"), unexpected_token);
     }
