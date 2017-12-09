@@ -25,6 +25,7 @@ function(enable_coverage target)
         get_property(sources TARGET ${target} PROPERTY SOURCES)
         set(cov_commands "")
         set(valid_extensions ".c;.cpp;.cxx")
+        get_property(bindir TARGET ${target} PROPERTY BINARY_DIR)
         foreach(source ${sources})
             get_filename_component(file_ext ${source} EXT)
             list(FIND valid_extensions ${file_ext} is_source)
@@ -36,7 +37,7 @@ function(enable_coverage target)
         if(cov_commands)
             add_custom_target(TestCoverage_${target}
                 ${cov_commands}
-                WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                WORKING_DIRECTORY ${bindir}
                 COMMENT "Collecting gcov coverage information"
             )
         endif()
