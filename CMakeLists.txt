@@ -25,19 +25,20 @@ function(enable_coverage target)
         get_property(sources TARGET ${target} PROPERTY SOURCES)
         set(cov_commands "")
         set(valid_extensions ".c;.cpp;.cxx")
-        get_property(bindir TARGET ${target} PROPERTY BINARY_DIR)
+        get_property(target_bindir TARGET ${target} PROPERTY BINARY_DIR)
+        file(RELATIVE_PATH target_bindir_rel ${PROJECT_BINARY_DIR} ${target_bindir})
         foreach(source ${sources})
             get_filename_component(file_ext ${source} EXT)
             list(FIND valid_extensions ${file_ext} is_source)
             if(NOT (is_source EQUAL -1))
                 get_filename_component(file_name ${source} NAME)
-                list(APPEND cov_commands COMMAND ${GCOV_COMMAND} -o CMakeFiles/${target}.dir/${file_name}.gcno ${source})
+                list(APPEND cov_commands COMMAND ${GCOV_COMMAND} -o ${target_bindir_rel}/CMakeFiles/${target}.dir/${file_name}.gcno ${source})
             endif()
         endforeach()
         if(cov_commands)
             add_custom_target(TestCoverage_${target}
                 ${cov_commands}
-                WORKING_DIRECTORY ${bindir}
+                WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
                 COMMENT "Collecting gcov coverage information"
             )
         endif()
