@@ -7,8 +7,8 @@
 
 void iteratePassphrase(std::string_view passphrase, std::function<void(std::string_view)> callback_per_password)
 {
-    std::size_t current_pw_begin = 0;
-    std::size_t current_pw_size = 0;
+    int current_pw_begin = 0;
+    int current_pw_size = 0;
     auto const it_end = end(passphrase);
     for(auto it = begin(passphrase); it != it_end; ++it, ++current_pw_size) {
         if(*it == ' ') {

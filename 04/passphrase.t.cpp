@@ -17,9 +17,6 @@ TEST_CASE("Passphrase")
             case 3: CHECK(pwd == "dd"); break;
             case 4: CHECK(pwd == "ee"); break;
             }
-            std::string str(pwd);
-            std::string str2("bb");
-            bool res = str == str2;
             ++count;
         });
         CHECK(count == 5);

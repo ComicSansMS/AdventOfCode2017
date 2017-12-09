@@ -65,7 +65,7 @@ int Field::getCell(int x, int y) const
 void Field::fillField()
 {
     int count = 1;
-    fill([&count](int x, int y) { return ++count; });
+    fill([&count](int, int) { return ++count; });
 }
 
 void Field::printField(std::ostream& os)

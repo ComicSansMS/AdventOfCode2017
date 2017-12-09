@@ -121,14 +121,14 @@ int findWeightMismatch(std::vector<Program> const& programs)
 
                 int correct_weight = children.front().total_weight;
                 int odd_one = -1;
-                for(int i=1; i<children.size(); ++i) {
-                    if(children[i].total_weight != correct_weight) {
+                for(int j=1; j<children.size(); ++j) {
+                    if(children[j].total_weight != correct_weight) {
                         if(odd_one == -1) {
-                            odd_one = i;
+                            odd_one = j;
                         } else {
                             // we found *two* odds, which means, front is actually the odd one
                             odd_one = 0;
-                            correct_weight = children[i].total_weight;
+                            correct_weight = children[j].total_weight;
                             break;
                         }
                     }
