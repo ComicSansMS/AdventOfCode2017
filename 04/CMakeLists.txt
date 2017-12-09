@@ -1,12 +1,5 @@
-cmake_minimum_required(VERSION 3.9)
-
-project(advent04)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 add_library(passphrase STATIC passphrase.hpp passphrase.cpp)
-target_include_directories(passphrase PUBLIC ${PROJECT_SOURCE_DIR})
+target_include_directories(passphrase PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 add_executable(advent04 advent04.cpp)
 target_link_libraries(advent04 PUBLIC passphrase)
 
@@ -20,4 +13,5 @@ if(TARGET Catch)
     add_executable(passphrase_test passphrase.t.cpp)
     target_link_libraries(passphrase_test PUBLIC Catch passphrase)
     add_test(NAME TestAdvent04 COMMAND passphrase_test)
+    enable_coverage(passphrase)
 endif()

@@ -2,27 +2,44 @@ cmake_minimum_required(VERSION 3.9)
 
 project(AdventOfCode2017 CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option(GENERATE_COVERAGE_INFO "If set, line coverage info will be generated from debug test runs." OFF)
 if(GENERATE_COVERAGE_INFO)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        # this is an undocumented option for changing the output extension from *.cpp.ext
-        # to *.ext; As there is no reasonable way to obtain the list of object files
-        # this seems to be the best option to generate the naming gcov expects.
-        set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
-        set(GCOV_COMMAND gcov CACHE STRING "Command to invoke to run gcov.")
+        if(NOT CMAKE_BUILD_TYPE EQUAL "Debug")
+            message(FATAL_ERROR "Coverage collection only supported for Debug builds.")
+        endif()
+        find_program(GCOV_COMMAND NAMES gcov DOC "Command for running gcov.")
+        if(NOT GCOV_COMMAND)
+            message(FATAL_ERROR "gcov was not found.")
+        endif()
+        add_compile_options(--coverage)
+        link_libraries(--coverage)
     endif()
 endif()
 
-function(enable_coverage TARGET_NAME TARGET_SOURCE_FILES)
+function(enable_coverage target)
     if(GENERATE_COVERAGE_INFO AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
-        target_compile_options(${TARGET_NAME} PRIVATE --coverage -fprofile-arcs -ftest-coverage)
-        target_link_libraries(${TARGET_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
-        
-        add_custom_target(TestCoverage_${TARGET_NAME}
-            COMMAND ${GCOV_COMMAND} -o CMakeFiles/${TARGER_NAME}.dir/src ${TARGET_SOURCE_FILES}
-            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-            COMMENT "Collecting gcov coverage information"
-        )
+        get_property(sources TARGET ${target} PROPERTY SOURCES)
+        set(cov_commands "")
+        set(valid_extensions ".c;.cpp;.cxx")
+        foreach(source ${sources})
+            get_filename_component(file_ext ${source} EXT)
+            list(FIND valid_extensions ${file_ext} is_source)
+            if(NOT (is_source EQUAL -1))
+                get_filename_component(file_name ${source} NAME)
+                list(APPEND cov_commands COMMAND ${GCOV_COMMAND} -o CMakeFiles/${target}.dir/${file_name}.gcno ${source})
+            endif()
+        endforeach()
+        if(cov_commands)
+            add_custom_target(TestCoverage_${target}
+                ${cov_commands}
+                WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+                COMMENT "Collecting gcov coverage information"
+            )
+        endif()
     endif()
 endfunction()
 
