@@ -17,6 +17,7 @@ if(GENERATE_COVERAGE_INFO)
         endif()
         add_compile_options(--coverage)
         link_libraries(--coverage)
+        add_custom_target(coverage COMMENT "Collecting gcov coverage")
     endif()
 endif()
 
@@ -39,8 +40,9 @@ function(enable_coverage target)
             add_custom_target(TestCoverage_${target}
                 ${cov_commands}
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-                COMMENT "Collecting gcov coverage information"
+                COMMENT "Collecting gcov coverage for ${target}"
             )
+            add_dependencies(coverage TestCoverage_${target})
         endif()
     endif()
 endfunction()
