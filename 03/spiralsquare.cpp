@@ -1,6 +1,7 @@
 #include <spiralsquare.hpp>
 
 #include <cassert>
+#include <optional>
 #include <ostream>
 
 int getRing(int n)
@@ -43,11 +44,6 @@ Field::Field(int dimension)
     m_field.resize(m_dimension*m_dimension);
 }
 
-int Field::getDimension() const
-{
-    return m_dimension;
-}
-
 void Field::setCell(int x, int y, int v)
 {
     x += (m_dimension - 1) / 2;
@@ -86,16 +82,16 @@ Field::Coordinates Field::getCoordinates(int n) const
 {
     assert(n > 0 && n <= m_dimension*m_dimension);
     int limit = (m_dimension - 1) / 2;
-    for(int x = -limit; x <= limit; ++x) {
+    std::optional<Coordinates> ret;
+    for(int x = -limit; x <= limit && !ret; ++x) {
         for(int y = -limit; y <= limit; ++y) {
             if(getCell(x, y) == n) {
-                return Coordinates{x, y};
+                ret = Coordinates{x, y};
             }
         }
     }
-
-    // should never be reached
-    return Coordinates{};
+    assert(ret);
+    return *ret;
 }
 
 int Field::getDistanceFromCenter(int n) const

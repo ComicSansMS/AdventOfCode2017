@@ -40,8 +40,6 @@ private:
 public:
     Field(int dimension);
 
-    int getDimension() const;
-
     void setCell(int x, int y, int v);
 
     int getCell(int x, int y) const;

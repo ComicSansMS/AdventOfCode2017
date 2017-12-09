@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <optional>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -104,6 +105,7 @@ bool childrenAreBalanced(std::vector<Program> const& programs,
 
 int findWeightMismatch(std::vector<Program> const& programs)
 {
+    std::optional<int> ret;
     for(int i=0; i<programs.size(); ++i) {
         if(!childrenAreBalanced(programs, i)) {
             auto& node = programs[i];
@@ -139,10 +141,11 @@ int findWeightMismatch(std::vector<Program> const& programs)
                     programs[odds_children.front()].total_weight * static_cast<int>(odds_children.size());
 
                 // our weight plus the childrens weight should sum up to the correct weight
-                return std::abs(correct_weight - childrens_weight);
+                ret = std::abs(correct_weight - childrens_weight);
+                break;
             }
         }
     }
-
-    return -1;
+    assert(ret);
+    return *ret;
 }

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -59,18 +60,21 @@ int calculateSpreadChecksum(Spreadsheet const& spread)
 int calculateRowEvenDivide(Spreadsheet const& spread, std::size_t row_index)
 {
     auto row = spread.row(row_index);
-    for(std::size_t i = 0; i < row.size(); ++i) {
+    std::optional<int> ret;
+    for(std::size_t i = 0; i < row.size() && !ret; ++i) {
         int n1 = row[i];
         for(std::size_t j = 0; j < row.size(); ++j) {
             if(i != j) {
                 int n2 = row[j];
                 if((n1 > n2) && (n1 % n2 == 0)) {
-                    return n1 / n2;
+                    ret = n1 / n2;
+                    break;
                 }
             }
         }
     }
-    return 0;
+    assert(ret);
+    return *ret;
 }
 
 int calculateSpreadChecksumEvenDivide(Spreadsheet const& spread)
