@@ -45,7 +45,7 @@ std::vector<Program> parseInput(std::string_view input)
 void determineParents(std::vector<Program>& programs)
 {
     std::unordered_map<std::string, int> name_to_index;
-    for(std::size_t i=0; i<static_cast<int>(programs.size()); ++i) {
+    for(std::size_t i=0; i<programs.size(); ++i) {
         name_to_index[programs[i].name] = i;
     }
 
