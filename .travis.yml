@@ -50,7 +50,7 @@ install:
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DGENERATE_COVERAGE_INFO=ON ..
   - cmake --build .
 
 script:
@@ -68,3 +68,5 @@ after_success:
       ./advent0$i input
       cd ..
     done
+  - cmake --build . --target coverage
+  - bash <(curl -s https://codecov.io/bash)
