@@ -61,7 +61,7 @@ script:
 after_success:
   - cd ${TRAVIS_BUILD_DIR}/build
   - |
-    for i in `seq 1 7`;
+    for i in `seq 1 9`;
     do
       echo Result for day 0$i:
       cd 0$i

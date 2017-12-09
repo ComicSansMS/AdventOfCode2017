@@ -7,7 +7,7 @@
 #include <vector>
 
 struct unexpected_token : public virtual std::exception {
-    char const* what() const override { return "unexpected token"; }
+    char const* what() const noexcept override { return "unexpected token"; }
 };
 
 struct StateMachine {
