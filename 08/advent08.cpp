@@ -1,5 +1,7 @@
 #include <register_vm.hpp>
 
+#include <algorithm>
+
 #include <fstream>
 #include <iostream>
 #include <optional>
@@ -35,6 +37,13 @@ int main(int argc, char* argv[])
     if(!input) {
         return 1;
     }
+
+    auto vm = parseVM(*input);
+    int const highest_during_execution = executeVM(vm);
+
+    std::cout << "First result is " << highestRegisterValue(vm.registers) << std::endl;
+
+    std::cout << "Second result is " << highest_during_execution << std::endl;
 
     return 0;
 }
