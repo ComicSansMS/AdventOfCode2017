@@ -3,10 +3,6 @@ target_include_directories(memory_banks PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 add_executable(advent06 advent06.cpp)
 target_link_libraries(advent06 PUBLIC memory_banks)
 
-target_compile_options(advent06 PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
-target_compile_options(advent06 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/permissive->)
-target_compile_options(advent06 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/std:c++latest>)
-
 file(COPY input DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(TARGET Catch)

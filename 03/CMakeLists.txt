@@ -3,10 +3,6 @@ target_include_directories(spiralsquare PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 add_executable(advent03 advent03.cpp)
 target_link_libraries(advent03 PUBLIC spiralsquare)
 
-target_compile_options(advent03 PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
-target_compile_options(advent03 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/permissive->)
-target_compile_options(advent03 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/std:c++latest>)
-
 if(TARGET Catch)
     add_executable(spiralsquare_test spiralsquare.t.cpp)
     target_link_libraries(spiralsquare_test PUBLIC Catch spiralsquare)

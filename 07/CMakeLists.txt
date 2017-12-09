@@ -3,10 +3,6 @@ target_include_directories(program_tree PUBLIC ${CMAKE_CURRENT_LIST_DIR})
 add_executable(advent07 advent07.cpp)
 target_link_libraries(advent07 PUBLIC program_tree)
 
-target_compile_options(advent07 PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/W4>)
-target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/permissive->)
-target_compile_options(advent07 PUBLIC $<$<STREQUAL:$<CXX_COMPILER_ID>,MSVC>:/std:c++latest>)
-
 file(COPY input DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 if(TARGET Catch)

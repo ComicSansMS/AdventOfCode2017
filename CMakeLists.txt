@@ -53,6 +53,14 @@ add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 target_compile_definitions(Catch INTERFACE $<$<CXX_COMPILER_ID:MSVC>:_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING>)
 
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/W4>)
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/permissive->)
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/std:c++latest>)
+add_compile_options($<$<CXX_COMPILER_ID:GNU>:-Wall>)
+add_compile_options($<$<CXX_COMPILER_ID:GNU>:-pedantic>)
+add_compile_options($<$<CXX_COMPILER_ID:GNU>:-Wextra>)
+
+
 enable_testing()
 
 add_subdirectory(01)
