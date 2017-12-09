@@ -42,4 +42,31 @@ TEST_CASE("Garbage Stream")
         CHECK(sm9.inAcceptingState());
         CHECK(sm9.getScore() == 3);
     }
+
+    SECTION("Count Garbage")
+    {
+        auto sm1 = parseStream("{<>}");
+        CHECK(sm1.inAcceptingState());
+        CHECK(sm1.getGarbageCount() == 0);
+
+        auto sm2 = parseStream("{<<<<>}");
+        CHECK(sm2.inAcceptingState());
+        CHECK(sm2.getGarbageCount() == 3);
+
+        auto sm3 = parseStream("{<{!>}>}");
+        CHECK(sm3.inAcceptingState());
+        CHECK(sm3.getGarbageCount() == 2);
+
+        auto sm4 = parseStream("{<!!>}");
+        CHECK(sm4.inAcceptingState());
+        CHECK(sm4.getGarbageCount() == 0);
+
+        auto sm5 = parseStream("{<!!!>>}");
+        CHECK(sm5.inAcceptingState());
+        CHECK(sm5.getGarbageCount() == 0);
+
+        auto sm6 = parseStream(R"({<{o"i!a,<{i<a>})");
+        CHECK(sm6.inAcceptingState());
+        CHECK(sm6.getGarbageCount() == 10);
+    }
 }

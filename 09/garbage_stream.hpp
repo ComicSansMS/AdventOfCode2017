@@ -26,6 +26,7 @@ private:
     int m_groupDepth;
     int m_score;
     bool m_ignoreNextChar;
+    int m_garbageCount;
 public:
     StateMachine();
 
@@ -41,6 +42,9 @@ public:
     int getScore() const;
 
     void ignoreNextChar();
+
+    void countGarbage();
+    int getGarbageCount() const;
 };
 
 StateMachine parseStream(std::string_view input);

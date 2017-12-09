@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
     }
 
     std::cout << "First result is " << sm.getScore() << std::endl;
+    std::cout << "Second result is " << sm.getGarbageCount() << std::endl;
 
     return 0;
 }

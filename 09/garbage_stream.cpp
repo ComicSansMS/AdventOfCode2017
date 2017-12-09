@@ -3,7 +3,7 @@
 #include <cassert>
 
 StateMachine::StateMachine()
-    :m_state(Empty{}), m_groupDepth(0), m_score(0), m_ignoreNextChar(false)
+    :m_state(Empty{}), m_groupDepth(0), m_score(0), m_ignoreNextChar(false), m_garbageCount(0)
 {
 }
 
@@ -38,7 +38,7 @@ void StateMachine::InGarbage::process(char c, StateMachine& sm)
 {
     switch(c)
     {
-    default: break;
+    default: sm.countGarbage(); break;
     case '>': sm.switchState(InGroup{}); break;
     case '!': sm.ignoreNextChar(); break;
     }
@@ -86,6 +86,16 @@ int StateMachine::getScore() const
 void StateMachine::ignoreNextChar()
 {
     m_ignoreNextChar = true;
+}
+
+void StateMachine::countGarbage()
+{
+    ++m_garbageCount;
+}
+
+int StateMachine::getGarbageCount() const
+{
+    return m_garbageCount;
 }
 
 StateMachine parseStream(std::string_view input)
