@@ -65,7 +65,8 @@ std::vector<int> getDenseHash(StringCircle& sc)
     assert(sc.size() % 16 == 0);
     std::vector<int> denseList;
     denseList.reserve(sc.size() / 16);
-    for(int i=0; i<sc.size(); i+=16) {
+    assert(sc.size() <= std::numeric_limits<int>::max());
+    for(int i=0; i<static_cast<int>(sc.size()); i+=16) {
         int acc = 0;
         for(int j=0; j<16; ++j) {
             acc ^= sc[i+j];
