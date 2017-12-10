@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <limits>
 #include <optional>
 #include <regex>
 #include <sstream>
@@ -45,8 +46,9 @@ std::vector<Program> parseInput(std::string_view input)
 void determineParents(std::vector<Program>& programs)
 {
     std::unordered_map<std::string, int> name_to_index;
+    assert(programs.size() < std::numeric_limits<int>::max());
     for(std::size_t i=0; i<programs.size(); ++i) {
-        name_to_index[programs[i].name] = i;
+        name_to_index[programs[i].name] = static_cast<int>(i);
     }
 
     for(auto& p : programs) {
@@ -106,8 +108,9 @@ bool childrenAreBalanced(std::vector<Program> const& programs,
 int findWeightMismatch(std::vector<Program> const& programs)
 {
     std::optional<int> ret;
+    assert(programs.size() < std::numeric_limits<int>::max());
     for(std::size_t i=0; i<programs.size(); ++i) {
-        if(!childrenAreBalanced(programs, i)) {
+        if(!childrenAreBalanced(programs, static_cast<int>(i))) {
             auto& node = programs[i];
             bool all_grandchildren_balanced = std::all_of(begin(node.dep_indices), end(node.dep_indices),
                 [&](int c) { return childrenAreBalanced(programs, c); });
@@ -121,10 +124,11 @@ int findWeightMismatch(std::vector<Program> const& programs)
 
                 int correct_weight = children.front().total_weight;
                 int odd_one = -1;
+                assert(children.size() < std::numeric_limits<int>::max());
                 for(std::size_t j=1; j<children.size(); ++j) {
                     if(children[j].total_weight != correct_weight) {
                         if(odd_one == -1) {
-                            odd_one = j;
+                            odd_one = static_cast<int>(j);
                         } else {
                             // we found *two* odds, which means, front is actually the odd one
                             odd_one = 0;
