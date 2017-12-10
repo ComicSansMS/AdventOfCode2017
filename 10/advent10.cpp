@@ -39,12 +39,14 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    StringCircle sc(256, 0);
-    std::iota(begin(sc), end(sc), 0);
+    StringCircle sc = buildInitialCircle();
     auto const lengths = parseLengths(*input);
-    knotHash(sc, lengths);
+    KnotHashState state{ 0, 0 };
+    knotHashSingleRound(sc, lengths, state);
 
     std::cout << "First result is: " << (sc[0] * sc[1]) << std::endl;
+
+    std::cout << "Second result is: " << knotHash(*input) << std::endl;
 
     return 0;
 }
