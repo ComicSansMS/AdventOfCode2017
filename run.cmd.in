@@ -1,0 +1,14 @@
+@echo off
+FOR /L %%I IN (1,1,9) DO (
+  cd 0%%I
+  echo Result for day %%I:
+  Release\advent0%%I.exe
+  cd ..
+)
+FOR /L %%I IN (10,1,10) DO (
+  cd %%I
+  echo Result for day %%I:
+  Release\advent%%I.exe
+  cd ..
+)
+

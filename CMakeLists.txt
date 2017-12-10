@@ -60,6 +60,9 @@ add_compile_options($<$<CXX_COMPILER_ID:GNU>:-Wall>)
 add_compile_options($<$<CXX_COMPILER_ID:GNU>:-pedantic>)
 add_compile_options($<$<CXX_COMPILER_ID:GNU>:-Wextra>)
 
+if(MSVC)
+    configure_file(${PROJECT_SOURCE_DIR}/run.cmd.in ${PROJECT_BINARY_DIR}/run.cmd COPYONLY)
+endif()
 
 enable_testing()
 
