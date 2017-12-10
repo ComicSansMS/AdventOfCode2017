@@ -19,7 +19,9 @@ TEST_CASE("Knot Hash")
     {
         auto sc = buildInitialCircle();
         REQUIRE(sc.size() == 256);
-        for(int i=0; i<256; ++i) { CHECK(sc[i] == i); }
+        for(int i=0; i<256; ++i) {
+            CHECK(sc[i] == i);
+        }
     }
 
     SECTION("Circular Reverse")
