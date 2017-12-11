@@ -8,34 +8,37 @@
 
 Path parseInput(std::string_view input)
 {
-    auto const string_to_direction = [](char const* buffer) -> std::optional<Direction> {
+    auto const string_to_direction = [](char const* buffer) {
+            std::optional<Direction> ret;
             if(std::strcmp(buffer, "n") == 0) {
-                return Direction::N;
+                ret = Direction::N;
             } else if(std::strcmp(buffer, "ne") == 0) {
-                return Direction::NE;
+                ret = Direction::NE;
             } else if(std::strcmp(buffer, "se") == 0) {
-                return Direction::SE;
+                ret =  Direction::SE;
             } else if(std::strcmp(buffer, "s") == 0) {
-                return Direction::S;
+                ret =  Direction::S;
             } else if(std::strcmp(buffer, "sw") == 0) {
-                return Direction::SW;
+                ret =  Direction::SW;
             } else if(std::strcmp(buffer, "nw") == 0) {
-                return Direction::NW;
-            } else {
-                return std::nullopt;
+                ret =  Direction::NW;
             }
+            return ret;
         };
 
     char buffer[3];
     int i = 0;
     Path ret;
     for(auto const& c : input) {
+        assert(i < sizeof(buffer));
         if(c != ',') {
             buffer[i] = c;
             ++i;
         } else {
             buffer[i] = '\0';
-            ret.push_back(string_to_direction(buffer).value());
+            auto const direction = string_to_direction(buffer);
+            assert(direction);
+            ret.push_back(*direction);
             i = 0;
         }
     }
