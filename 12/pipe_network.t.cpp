@@ -35,7 +35,7 @@ TEST_CASE("Pipe Network")
     {
         auto cn = parseInput(input);
         REQUIRE(cn.size() == 7);
-        for(int i=0; i<cn.size(); ++i) {
+        for(std::size_t i=0; i<cn.size(); ++i) {
             CHECK(cn[i].node == i);
         }
         CHECK(cn[4].connected_nodes == std::vector<int>{ 2, 3, 6 });

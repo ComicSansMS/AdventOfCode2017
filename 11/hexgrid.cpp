@@ -27,7 +27,7 @@ Path parseInput(std::string_view input)
         };
 
     char buffer[3];
-    int i = 0;
+    std::size_t i = 0;
     Path ret;
     for(auto const& c : input) {
         assert(i < sizeof(buffer));
