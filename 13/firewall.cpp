@@ -19,7 +19,7 @@ Firewall parseInput(std::string_view input)
         std::regex_match(line, matches, rx_line);
         int current_position = std::stoi(matches[1]);
         int range = std::stoi(matches[2]);
-        while(ret.scanners.size() < current_position) { ret.scanners.push_back(std::nullopt); }
+        while(static_cast<int>(ret.scanners.size()) < current_position) { ret.scanners.push_back(std::nullopt); }
         Firewall::Scanner scanner;
         scanner.range = range;
         scanner.position = 0;

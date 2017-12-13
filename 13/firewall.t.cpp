@@ -14,7 +14,7 @@ std::ostream& operator<<(std::ostream& os, Firewall const& rhs)
     auto const max_depth = std::max_element(begin(rhs.scanners), end(rhs.scanners),
                                             [](auto const& lhs, auto const& rhs)
                                             {
-                                                Firewall::Scanner def{ -1, 0 };
+                                                Firewall::Scanner def{ -1, 0, Firewall::Scanner::Direction::Up };
                                                 return lhs.value_or(def).range < rhs.value_or(def).range;
                                             })->value().range;
 
@@ -29,7 +29,7 @@ std::ostream& operator<<(std::ostream& os, Firewall const& rhs)
             }
         };
     for(int depth=-1; depth<max_depth; ++depth) {
-        for(int pos=0; pos<rhs.scanners.size(); ++pos) {
+        for(int pos=0; pos<static_cast<int>(rhs.scanners.size()); ++pos) {
             if(depth == -1) {
                 std::cout << ' ' << pos << ' ';
             } else if(depth == 0) {
