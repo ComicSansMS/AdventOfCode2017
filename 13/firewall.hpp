@@ -32,6 +32,8 @@ struct TraversalResult {
 
 TraversalResult simulateTraversal(int initial_wait, Firewall& firewall);
 
+bool simulateTraversal_fast(Firewall& firewall);
+
 int findSmallestDelay(Firewall const& firewall);
 
 #endif

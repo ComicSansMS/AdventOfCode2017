@@ -85,14 +85,29 @@ TraversalResult simulateTraversal(int initial_wait, Firewall& firewall)
     return ret;
 }
 
+bool simulateTraversal_fast(Firewall& firewall)
+{
+    int const field_width = static_cast<int>(firewall.scanners.size());
+    while(firewall.player_position < field_width) {
+        bool was_caught_in_step = simulateStep(firewall, Player::Move);
+        if(was_caught_in_step) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 int findSmallestDelay(Firewall const& firewall)
 {
     int delay = 0;
+    auto start_state = firewall;
     for(;; ++delay) {
-        auto tmp = firewall;
-        if(!simulateTraversal(delay, tmp).was_caught) {
+        auto tmp = start_state;
+        if(!simulateTraversal_fast(tmp)) {
             break;
         }
+        simulateStep(start_state, Player::Stop);
     }
     return delay;
 }

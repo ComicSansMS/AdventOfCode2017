@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
     auto const initial_firewall = parseInput(*input);
     auto firewall1 = initial_firewall;
     std::cout << "First result is " << simulateTraversal(0, firewall1).penalty << std::endl;
-    //std::cout << "Second result is " << findSmallestDelay(initial_firewall) << std::endl;
+    std::cout << "Second result is " << findSmallestDelay(initial_firewall) << std::endl;
 
     return 0;
 }
