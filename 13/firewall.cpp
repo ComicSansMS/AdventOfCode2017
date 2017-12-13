@@ -89,9 +89,33 @@ bool simulateTraversal_fast(Firewall& firewall)
 {
     int const field_width = static_cast<int>(firewall.scanners.size());
     while(firewall.player_position < field_width) {
-        bool was_caught_in_step = simulateStep(firewall, Player::Move);
-        if(was_caught_in_step) {
+        ++firewall.player_position;
+        if((firewall.player_position >= 0) &&
+            (static_cast<std::size_t>(firewall.player_position) < firewall.scanners.size()) &&
+            (firewall.scanners[firewall.player_position]) &&
+            (firewall.scanners[firewall.player_position]->position == 0)) {
             return true;
+        }
+
+        for(auto& opt_scanner : firewall.scanners) {
+            if(opt_scanner) {
+                auto& scanner = *opt_scanner;
+                if(scanner.direction == Firewall::Scanner::Direction::Down) {
+                    if(scanner.position == scanner.range - 1) {
+                        scanner.direction = Firewall::Scanner::Direction::Up;
+                        --scanner.position;
+                    } else {
+                        ++scanner.position;
+                    }
+                } else {
+                    if(scanner.position == 0) {
+                        scanner.direction = Firewall::Scanner::Direction::Down;
+                        ++scanner.position;
+                    } else {
+                        --scanner.position;
+                    }
+                }
+            }
         }
     }
     return false;
