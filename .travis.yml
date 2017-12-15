@@ -26,6 +26,9 @@ install:
   - which cmake
   - cmake --version
 
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+
   - |
     if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       if [[ "${CXX%%+*}" == "clang" ]]; then
