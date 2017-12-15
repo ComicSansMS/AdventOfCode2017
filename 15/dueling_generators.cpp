@@ -7,43 +7,45 @@
 #include <sstream>
 #include <vector>
 
-std::vector<Generator> parseInput(std::string_view input)
+Generators parseInput(std::string_view input)
 {
     std::regex rx_line(R"(^Generator (\w+) starts with (\d+)$)");
 
-    std::vector<Generator> ret;
-
+    Generators ret = { {-1,-1}, {-1,-1} };
     using regex_it = std::regex_iterator<std::string_view::iterator>;
     auto const it_begin = regex_it(begin(input), end(input), rx_line);
     auto const it_end = regex_it();
-    std::transform(it_begin, it_end, std::back_inserter(ret), [](auto const& match) {
-        int factor = -1;
-        if(match[1].compare("A") == 0) {
-            factor = 16807;
-        } else if(match[1].compare("B") == 0) {
-            factor = 48271;
-        }
-        assert(factor != -1);
+    for(auto it = it_begin; it != it_end; ++it) {
+        auto const& match = *it;
         int current_value = std::stoi(match[2]);
-        return Generator{ factor, current_value };
-    });
+        if(match[1].compare("A") == 0) {
+            ret.a = { 16807, current_value };
+        } else if(match[1].compare("B") == 0) {
+            ret.b = { 48271, current_value };
+        }
+    }
+    assert((ret.a.current_value != -1) && (ret.b.current_value != -1));
     return ret;
 }
 
-void generate(std::vector<Generator>& gen)
+void generate(Generators& gen)
 {
-    for(auto& g : gen) {
-        g.current_value = static_cast<std::uint64_t>(g.current_value) * g.factor % 2147483647u;
-    }
+    gen.a.current_value = static_cast<std::uint64_t>(gen.a.current_value) * gen.a.factor % 2147483647u;
+    gen.b.current_value = static_cast<std::uint64_t>(gen.b.current_value) * gen.b.factor % 2147483647u;
 }
 
-bool does_match(std::vector<Generator> const& gen)
+void generate_picky(Generators& gen)
 {
-    assert(gen.size() > 1);
-    auto it = begin(gen);
+    do {
+        gen.a.current_value = static_cast<std::uint64_t>(gen.a.current_value) * gen.a.factor % 2147483647u;
+    } while((gen.a.current_value % 4) != 0);
+    do {
+        gen.b.current_value = static_cast<std::uint64_t>(gen.b.current_value) * gen.b.factor % 2147483647u;
+    } while((gen.b.current_value % 8) != 0);
+}
+
+bool does_match(Generators const& gen)
+{
     int const mask = 0xffff;
-    std::uint16_t const expected = static_cast<std::uint16_t>(it->current_value & mask);
-    return std::all_of(it + 1, end(gen), [mask, expected](Generator const& g) { 
-        return static_cast<std::uint16_t>(g.current_value & mask) == expected;
-    });
+    return static_cast<std::uint16_t>(gen.a.current_value & mask) == static_cast<std::uint16_t>(gen.b.current_value & mask);
 }

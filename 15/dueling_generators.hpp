@@ -3,17 +3,24 @@
 
 #include <string>
 #include <string_view>
-#include <vector>
+#include <utility>
 
 struct Generator {
-    int const factor;
+    int factor;
     int current_value;
 };
 
-std::vector<Generator> parseInput(std::string_view input);
+struct Generators {
+    Generator a;
+    Generator b;
+};
 
-void generate(std::vector<Generator>& gen);
+Generators parseInput(std::string_view input);
 
-bool does_match(std::vector<Generator> const& gen);
+void generate(Generators& gen);
+
+void generate_picky(Generators& gen);
+
+bool does_match(Generators const& gen);
 
 #endif

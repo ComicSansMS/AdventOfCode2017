@@ -26,14 +26,24 @@ std::optional<std::string> readInput(char const* filename)
     return sstr.str();
 }
 
-int judge(std::vector<Generator> gen)
+int judge(Generators gen)
 {
     int const count = 40'000'000;
     int total_matches = 0;
     for(int i=0; i<count; ++i) {
         generate(gen);
         if(does_match(gen)) { ++total_matches; }
-        if((i%1'000'000) == 0) {std::cout << i << std::endl;}
+    }
+    return total_matches;
+}
+
+int judge_picky(Generators gen)
+{
+    int const count = 5'000'000;
+    int total_matches = 0;
+    for(int i=0; i<count; ++i) {
+        generate_picky(gen);
+        if(does_match(gen)) { ++total_matches; }
     }
     return total_matches;
 }
@@ -54,6 +64,7 @@ int main(int argc, char* argv[])
 
     auto gen = parseInput(*input);
     std::cout << "First result is " << judge(gen) << std::endl;
+    std::cout << "Second result is " << judge_picky(gen) << std::endl;
 
     return 0;
 }
