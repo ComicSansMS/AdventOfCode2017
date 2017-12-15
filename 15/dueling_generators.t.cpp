@@ -68,8 +68,10 @@ Generator B starts with 8921)";
         CHECK(g.b.current_value == 412269392);
 
         int i = 5;
-        while(!does_match(g)) {
+        bool b_does_match = does_match(g);
+        while(!b_does_match) {
             generate_picky(g);
+            b_does_match = does_match(g);
             ++i;
         }
         CHECK(i == 1056);
