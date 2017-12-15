@@ -5,7 +5,6 @@
 #include <cassert>
 #include <cstdint>
 #include <numeric>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -103,18 +102,13 @@ std::size_t Grid::countRegions() const
     // as soon as we find a 1 element, flood fill the region with 0s.
     // continue until no more 1 can be found
     std::size_t n_regions = 0;
-    for(;;) {
-        std::optional<Coordinates> candidate;
-        for(std::uint8_t ir = 0; ir < 128; ++ir) {
-            for(std::uint8_t ic = 0; ic < 128; ++ic) {
-                if(g[ir][ic]) {
-                    candidate = Coordinates{ ir, ic };
-                }
+    for(std::uint8_t ir = 0; ir < 128; ++ir) {
+        for(std::uint8_t ic = 0; ic < 128; ++ic) {
+            if(g[ir][ic]) {
+                floodFill(g, ir, ic);
+                ++n_regions;
             }
         }
-        if(!candidate) { break; }
-        floodFill(g, candidate->r, candidate->c);
-        ++n_regions;
     }
     return n_regions;
 }
