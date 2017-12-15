@@ -9,7 +9,7 @@
 
 Generators parseInput(std::string_view input)
 {
-    std::regex rx_line(R"(^Generator (\w+) starts with (\d+)$)");
+    std::regex rx_line(R"(Generator (\w+) starts with (\d+))");
 
     Generators ret = { {-1,-1}, {-1,-1} };
     using regex_it = std::regex_iterator<std::string_view::iterator>;
