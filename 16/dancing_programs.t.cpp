@@ -43,13 +43,13 @@ TEST_CASE("Dancing programs")
         auto stage = createDancingStage();
         stage.resize(5);
         Spin s3{ 3 };
-        dance(stage, s3);
+        perform_move(stage, s3);
         CHECK(to_string(stage) == "cdeab");
 
         stage = createDancingStage();
         stage.resize(5);
         Spin s1{ 1 };
-        dance(stage, s1);
+        perform_move(stage, s1);
         CHECK(to_string(stage) == "eabcd");
     }
 
@@ -58,7 +58,7 @@ TEST_CASE("Dancing programs")
         auto stage = createDancingStage();
         stage.resize(5);
         Exchange x2_4{ 2, 4 };
-        dance(stage, x2_4);
+        perform_move(stage, x2_4);
         CHECK(to_string(stage) == "abedc");
     }
 
@@ -67,30 +67,30 @@ TEST_CASE("Dancing programs")
         auto stage = createDancingStage();
         stage.resize(5);
         Partner pe_b{ 'e', 'b' };
-        dance(stage, pe_b);
+        perform_move(stage, pe_b);
         CHECK(to_string(stage) == "aecdb");
     }
 
     SECTION("Dance")
     {
-        auto full_dance = parseInput(input);
+        auto dance = parseInput(input);
         auto stage = createDancingStage();
         stage.resize(5);
 
-        dance(stage, full_dance);
+        perform(stage, dance);
         CHECK(to_string(stage) == "baedc");
 
-        dance(stage, full_dance);
+        perform(stage, dance);
         CHECK(to_string(stage) == "ceadb");
     }
 
     SECTION("Find period")
     {
-        auto full_dance = parseInput(input);
+        auto dance = parseInput(input);
         auto stage = createDancingStage();
         stage.resize(5);
 
-        CHECK(findPeriod(stage, full_dance) == 4);
-        CHECK(findPeriod(stage, full_dance) == 4);
+        CHECK(findPeriod(stage, dance) == 4);
+        CHECK(findPeriod(stage, dance) == 4);
     }
 }

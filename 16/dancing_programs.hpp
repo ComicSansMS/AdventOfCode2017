@@ -31,11 +31,11 @@ using Dance = std::vector<DanceMove>;
 
 Dance parseInput(std::string_view input);
 
-void dance(DancingStage& stage, Spin const& move);
-void dance(DancingStage& stage, Exchange const& move);
-void dance(DancingStage& stage, Partner const& move);
+void perform_move(DancingStage& stage, Spin const& move);
+void perform_move(DancingStage& stage, Exchange const& move);
+void perform_move(DancingStage& stage, Partner const& move);
 
-void dance(DancingStage& stage, Dance const& dance);
+void perform(DancingStage& stage, Dance const& dance);
 
 std::size_t findPeriod(DancingStage& stage, Dance const& dance);
 #endif

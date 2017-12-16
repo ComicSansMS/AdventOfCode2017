@@ -53,20 +53,20 @@ Dance parseInput(std::string_view input)
     return ret;
 }
 
-void dance(DancingStage& stage, Spin const& move)
+void perform_move(DancingStage& stage, Spin const& move)
 {
     assert(move.x  < stage.size());
     auto it_split = end(stage) - move.x;
     std::rotate(begin(stage), it_split, end(stage));
 }
 
-void dance(DancingStage& stage, Exchange const& move)
+void perform_move(DancingStage& stage, Exchange const& move)
 {
     assert((move.pos_a  < stage.size()) && (move.pos_b < stage.size()));
     std::swap(*(begin(stage) + move.pos_a), *(begin(stage) + move.pos_b));
 }
 
-void dance(DancingStage& stage, Partner const& move)
+void perform_move(DancingStage& stage, Partner const& move)
 {
     auto it1 = std::find(begin(stage), end(stage), move.name_a);
     auto it2 = std::find(begin(stage), end(stage), move.name_b);
@@ -74,21 +74,18 @@ void dance(DancingStage& stage, Partner const& move)
     std::swap(*it1, *it2);
 }
 
-void dance(DancingStage& stage, Dance const& full_dance)
+void perform(DancingStage& stage, Dance const& dance)
 {
-    for(auto const& move : full_dance) {
-        std::visit([&stage](auto m) { dance(stage, m); }, move);
+    for(auto const& move : dance) {
+        std::visit([&stage](auto m) { perform_move(stage, m); }, move);
     }
 }
 
-std::size_t findPeriod(DancingStage& stage, Dance const& full_dance)
+std::size_t findPeriod(DancingStage& stage, Dance const& dance)
 {
     std::unordered_set<std::string> known_positions;
     for(std::size_t i=0; ; ++i) {
-        for(auto const& move : full_dance) {
-            std::visit([&stage](auto m) { dance(stage, m); }, move);
-        
-        }
+        perform(stage, dance);
         auto position = to_string(stage);
         if(known_positions.find(position) == end(known_positions)) {
             known_positions.insert(position);
