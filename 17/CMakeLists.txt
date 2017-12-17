@@ -1,0 +1,11 @@
+add_library(spin_lock STATIC spin_lock.hpp spin_lock.cpp)
+target_include_directories(spin_lock PUBLIC ${CMAKE_CURRENT_LIST_DIR})
+add_executable(advent17 advent17.cpp)
+target_link_libraries(advent17 PUBLIC spin_lock)
+
+if(TARGET Catch)
+    add_executable(spin_lock_test spin_lock.t.cpp)
+    target_link_libraries(spin_lock_test PUBLIC Catch spin_lock)
+    add_test(NAME TestAdvent17 COMMAND spin_lock_test)
+    enable_coverage(spin_lock)
+endif()
