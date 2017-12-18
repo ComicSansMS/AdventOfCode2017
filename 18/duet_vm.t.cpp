@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <numeric>
 
-TEST_CASE("Duet")
+TEST_CASE("Duet, Part 1")
 {
     char const* input = R"(set a 1
 add a 2
@@ -36,12 +36,12 @@ jgz a -2)";
         CHECK(std::get<Mod>(program[3]).dest.r == 'a');
         CHECK(std::get<Number>(std::get<Mod>(program[3]).value).n == 5);
 
-        CHECK(std::get<Register>(std::get<Snd>(program[4]).freq).r == 'a');
+        CHECK(std::get<Register>(std::get<Snd>(program[4]).value).r == 'a');
 
         CHECK(std::get<Set>(program[5]).dest.r == 'a');
         CHECK(std::get<Number>(std::get<Set>(program[5]).value).n == 0);
 
-        CHECK(std::get<Rcv>(program[6]).condition.r == 'a');
+        CHECK(std::get<Rcv>(program[6]).reg.r == 'a');
 
         CHECK(std::get<Register>(std::get<Jgz>(program[7]).condition).r == 'a');
         CHECK(std::get<Number>(std::get<Jgz>(program[7]).offset).n == -1);
@@ -168,5 +168,80 @@ jgz a -2)";
         executeProgram(vm, program);
         CHECK(vm.rcv_value == 4);
     }
+}
 
+TEST_CASE("Duet, Part 2")
+{
+    char const* parallel_input = R"(snd 1
+snd 2
+snd p
+rcv a
+rcv b
+rcv c
+rcv d)";
+
+    SECTION("Execute parallel")
+    {
+        auto parallel_program = parseInput(parallel_input);
+
+        ParallelVm vm;
+        initializeParallelVm(vm);
+
+        CHECK(vm[0].queue.empty());
+        CHECK(vm[1].queue.empty());
+        CHECK(vm[0].rcv_value == 0);
+        CHECK(vm[1].rcv_value == 0);
+
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[0]) == 1);
+        CHECK(vm[0].rcv_value == 1);
+        CHECK(vm[0].pc == 1);
+        REQUIRE(vm[1].queue.size() == 1);
+        CHECK(vm[1].queue[0] == 1);
+
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[1]) == 1);
+        CHECK(vm[0].rcv_value == 2);
+        CHECK(vm[0].pc == 2);
+        CHECK(vm[1].queue == std::deque<int64_t>{ 1, 2 });
+
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[2]) == 1);
+        CHECK(vm[0].rcv_value == 3);
+        CHECK(vm[0].pc == 3);
+        CHECK(vm[1].queue == std::deque<int64_t>{ 1, 2, 0 });
+
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[3]) == 0);
+        CHECK(vm[0].pc == 3);
+
+
+        CHECK(executeInstruction_Parallel(vm, 1, parallel_program[0]) == 1);
+        CHECK(vm[1].rcv_value == 1);
+        CHECK(vm[1].pc == 1);
+        CHECK(vm[0].queue == std::deque<int64_t>{ 1 });
+
+        CHECK(vm[0].registers[0] == 0);
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[3]) == 1);
+        CHECK(vm[0].rcv_value == 3);
+        CHECK(vm[0].pc == 4);
+        CHECK(vm[0].queue.empty());
+        CHECK(vm[0].registers[0] == 1);
+
+        CHECK(executeInstruction_Parallel(vm, 1, parallel_program[1]) == 1);
+        CHECK(vm[1].rcv_value == 2);
+        CHECK(vm[1].pc == 2);
+        CHECK(vm[0].queue == std::deque<int64_t>{ 2 });
+
+        CHECK(executeInstruction_Parallel(vm, 1, parallel_program[2]) == 1);
+        CHECK(vm[1].rcv_value == 3);
+        CHECK(vm[1].pc == 3);
+        CHECK(vm[0].queue == std::deque<int64_t>{ 2, 1 });
+    }
+
+    SECTION("Execute program parallel")
+    {
+        auto parallel_program = parseInput(parallel_input);
+
+        ParallelVm vm;
+        initializeParallelVm(vm);
+
+        CHECK(executeParallel(vm, parallel_program) == 3);
+    }
 }

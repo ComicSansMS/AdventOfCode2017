@@ -43,5 +43,9 @@ int main(int argc, char* argv[])
 
     std::cout << "First result is " << vm.rcv_value << std::endl;
 
+    ParallelVm pvm;
+    initializeParallelVm(pvm);
+    std::cout << "Second result is " << executeParallel(pvm, program) << std::endl;
+
     return 0;
 }
