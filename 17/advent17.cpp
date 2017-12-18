@@ -1,16 +1,15 @@
 #include <spin_lock.hpp>
 
 #include <algorithm>
+#include <cstdlib>
 #include <iostream>
 
 int main(int argc, char* argv[])
 {
-    char const* input_filename = "input";
+    int input = 356;
     if(argc == 2) {
-        input_filename = argv[1];
+        input = std::atoi(argv[1]);
     }
-
-    int const input = 356;
 
     auto const [b, i] = spin(input, 2017);
 

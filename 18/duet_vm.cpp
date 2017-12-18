@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <regex>
+#include <sstream>
 #include <string>
 
 Program parseInput(std::string_view input)
@@ -11,7 +12,7 @@ Program parseInput(std::string_view input)
 
     std::regex rx_line(R"(^(\w\w\w) ([-\w\d]+)( ([-\w\d]+))?$)");
 
-    auto parseValue = [](std::sub_match<std::string_view::iterator> match) -> Value {
+    auto parseValue = [](std::sub_match<std::string::const_iterator> match) -> Value {
         auto const input = match.str();
         if((input[0] >= 'a') && (input[0] <= 'z')) {
             return Register{ input[0] };
@@ -20,11 +21,11 @@ Program parseInput(std::string_view input)
         }
     };
 
-    using regex_it = std::regex_iterator<std::string_view::iterator>;
-    auto const it_begin = regex_it(begin(input), end(input), rx_line);
-    auto const it_end = regex_it();
-    for(auto it = it_begin; it != it_end; ++it) {
-        auto match = *it;
+    std::string line;
+    std::stringstream sstr{std::string(input)};
+    while(std::getline(sstr, line)) {
+        std::smatch match;
+        std::regex_match(line, match, rx_line);
         if(match[1].compare("snd") == 0) {
             ret.push_back(Snd{ parseValue(match[2]) });
         } else if(match[1].compare("set") == 0) {
