@@ -184,7 +184,8 @@ snd p
 rcv a
 rcv b
 rcv c
-rcv d)";
+rcv d
+set b 42)";
 
     SECTION("Execute parallel")
     {
@@ -239,6 +240,10 @@ rcv d)";
         CHECK(vm[1].rcv_value == 3);
         CHECK(vm[1].pc == 3);
         CHECK(vm[0].queue == std::deque<int64_t>{ 2, 1 });
+
+
+        CHECK(executeInstruction_Parallel(vm, 0, parallel_program[7]) == 1);
+        CHECK(vm[0].registers[1] == 42);
     }
 
     SECTION("Execute program parallel")
