@@ -154,6 +154,12 @@ jgz a -2)";
         CHECK(last_rcv == 4);
         CHECK(vm.pc == 7);
         CHECK(vm.registers[0] == 1);
+
+        // jgz should do nothing for negative values
+        vm.registers[0] = -1;
+        CHECK(executeInstruction(vm, program[7]) == 0);
+        CHECK(vm.pc == 8);
+        CHECK(vm.registers[0] == -1);
     }
 
     SECTION("Execution")
