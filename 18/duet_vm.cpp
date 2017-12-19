@@ -1,7 +1,6 @@
 #include <duet_vm.hpp>
 
 #include <cassert>
-
 #include <regex>
 #include <sstream>
 #include <string>
