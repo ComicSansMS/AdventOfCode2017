@@ -49,9 +49,9 @@ endfunction()
 
 
 find_path(CATCH_INCLUDE_DIR NAMES catch.hpp PATHS ${PROJECT_SOURCE_DIR}/external/catch)
-add_library(Catch INTERFACE)
-target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-target_compile_definitions(Catch INTERFACE $<$<CXX_COMPILER_ID:MSVC>:_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING>)
+add_library(Catch STATIC ${PROJECT_SOURCE_DIR}/external/catch/catch_main.cpp)
+target_include_directories(Catch PUBLIC ${CATCH_INCLUDE_DIR})
+target_compile_definitions(Catch PUBLIC $<$<CXX_COMPILER_ID:MSVC>:_SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING>)
 
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/W4>)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/permissive->)
