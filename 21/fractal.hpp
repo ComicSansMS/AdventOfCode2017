@@ -89,8 +89,8 @@ inline bool doesMatch(RuleNxN<N> const& r, SubFieldNxN<N> const& f)
 {
     for(auto const& tr : r.match) {
         bool does_match = true;
-        for(int iy=0; iy<N; ++iy) {
-            for(int ix=0; ix<N; ++ix) {
+        for(std::size_t iy=0; iy<N; ++iy) {
+            for(std::size_t ix=0; ix<N; ++ix) {
                 if((tr[iy*N + ix] == 1) != f.getField(ix, iy)) {
                     does_match = false;
                 }

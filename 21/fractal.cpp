@@ -29,8 +29,7 @@ Rules parseInput(std::string_view input)
             std::transform(begin(str_3x3), end(str_3x3), begin(r.replacement), convert);
             ret.rules2x2.push_back(r);
         } else {
-            bool res = std::regex_match(line, matches, rx_3x3);
-            assert(res);
+            std::regex_match(line, matches, rx_3x3);
             Rule3x3 r;
             auto const str_3x3 = matches[1].str() + matches[2].str() + matches[3].str();
             assert(str_3x3.length() == 9);
@@ -102,15 +101,15 @@ Canvas Canvas::applyRules(Rules const& rules)
         auto const n_blocks = m_width / 2;
         auto const new_width = n_blocks * 3;
         Canvas ret(std::vector<char>(new_width*new_width, 0), new_width);
-        for(int iy=0; iy<n_blocks; ++iy) {
-            for(int ix=0; ix<n_blocks; ++ix) {
+        for(std::size_t iy=0; iy<n_blocks; ++iy) {
+            for(std::size_t ix=0; ix<n_blocks; ++ix) {
                 auto source = getSubField2x2(ix, iy);
                 auto it_match = std::find_if(begin(rules.rules2x2), end(rules.rules2x2),
                                              [source](auto const& r) { return doesMatch(r, source); });
                 assert(it_match != end(rules.rules2x2));
                 auto target = ret.getSubField3x3(ix, iy);
-                for(int iiy=0; iiy<3; ++iiy) {
-                    for(int iix=0; iix<3; ++iix) {
+                for(std::size_t iiy=0; iiy<3; ++iiy) {
+                    for(std::size_t iix=0; iix<3; ++iix) {
                         target.setField(iix, iiy, (it_match->replacement[iiy*3 + iix] != 0));
                     }
                 }
@@ -122,15 +121,15 @@ Canvas Canvas::applyRules(Rules const& rules)
         auto const n_blocks = m_width / 3;
         auto const new_width = n_blocks * 4;
         Canvas ret(std::vector<char>(new_width*new_width, 0), new_width);
-        for(int iy=0; iy<n_blocks; ++iy) {
-            for(int ix=0; ix<n_blocks; ++ix) {
+        for(std::size_t iy=0; iy<n_blocks; ++iy) {
+            for(std::size_t ix=0; ix<n_blocks; ++ix) {
                 auto source = getSubField3x3(ix, iy);
                 auto it_match = std::find_if(begin(rules.rules3x3), end(rules.rules3x3),
                                              [source](auto const& r) { return doesMatch(r, source); });
                 assert(it_match != end(rules.rules3x3));
                 auto target = ret.getSubField4x4(ix, iy);
-                for(int iiy=0; iiy<4; ++iiy) {
-                    for(int iix=0; iix<4; ++iix) {
+                for(std::size_t iiy=0; iiy<4; ++iiy) {
+                    for(std::size_t iix=0; iix<4; ++iix) {
                         target.setField(iix, iiy, (it_match->replacement[iiy*4 + iix] != 0));
                     }
                 }
