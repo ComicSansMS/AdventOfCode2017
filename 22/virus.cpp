@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sstream>
 #include <string>
+#include <utility>
 
 Grid parseInput(std::string_view input)
 {
@@ -32,7 +33,7 @@ Grid parseInput(std::string_view input)
             char const c = field[linear_count];
             assert((c == '#') || (c == '.'));
             if(c == '#') {
-                ret.field.insert(Position{x, y});
+                ret.field.insert(std::make_pair(Position{x, y}, State::Infected));
             }
             ++linear_count;
         }
@@ -96,7 +97,7 @@ bool performBurst(Grid& grid)
     } else {
         ret = true;
         grid.direction = turnLeft(grid.direction);
-        grid.field.insert(grid.position);
+        grid.field.insert(std::make_pair(grid.position, State::Infected));
     }
     grid.position = moveForward(grid.position, grid.direction);
     return ret;
@@ -107,6 +108,40 @@ int run(Grid& grid, int n_bursts)
     int ret = 0;
     for(int i=0; i<n_bursts; ++i) {
         if(performBurst(grid)) { ++ret; }
+    }
+    return ret;
+}
+
+bool performBurst2(Grid& grid)
+{
+    bool ret = false;
+    auto it = grid.field.find(grid.position);
+    if(it != end(grid.field)) {
+        if(it->second == State::Weakened) {
+            it->second = State::Infected;
+            ret = true;
+        } else if(it->second == State::Infected) {
+            grid.direction = turnRight(grid.direction);
+            it->second = State::Flagged;
+        } else {
+            assert(it->second == State::Flagged);
+            grid.direction = turnRight(turnRight(grid.direction));
+            grid.field.erase(it);
+        }
+    } else {
+        // clean
+        grid.direction = turnLeft(grid.direction);
+        grid.field.insert(std::make_pair(grid.position, State::Weakened));
+    }
+    grid.position = moveForward(grid.position, grid.direction);
+    return ret;
+}
+
+int run2(Grid& grid, int n_bursts)
+{
+    int ret = 0;
+    for(int i=0; i<n_bursts; ++i) {
+        if(performBurst2(grid)) { ++ret; }
     }
     return ret;
 }

@@ -35,9 +35,12 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    auto grid = parseInput(*input);
+    auto const grid = parseInput(*input);
+    auto grid1 = grid;
+    std::cout << "First result is " << run(grid1, 10'000) << std::endl;
 
-    std::cout << "First result is " << run(grid, 10'000) << std::endl;
+    auto grid2 = grid;
+    std::cout << "First result is " << run2(grid2, 10'000'000) << std::endl;
 
     return 0;
 }

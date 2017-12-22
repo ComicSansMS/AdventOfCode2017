@@ -29,8 +29,12 @@ enum class Direction {
     Up, Down, Left, Right
 };
 
+enum class State {
+    Weakened, Infected, Flagged
+};
+
 struct Grid{
-    std::unordered_set<Position> field;
+    std::unordered_map<Position, State> field;
     Position position;
     Direction direction;
 };
@@ -38,7 +42,9 @@ struct Grid{
 Grid parseInput(std::string_view input);
 
 bool performBurst(Grid& grid);
-
 int run(Grid& grid, int n_bursts);
+
+bool performBurst2(Grid& grid);
+int run2(Grid& grid, int n_bursts);
 
 #endif
