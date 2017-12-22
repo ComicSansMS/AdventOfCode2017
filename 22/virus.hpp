@@ -5,6 +5,7 @@
 #include <functional>
 #include <string_view>
 #include <unordered_map>
+#include <vector>
 
 struct Position {
     std::int32_t x;

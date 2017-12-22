@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
+#include <vector>
 
 Grid parseInput(std::string_view input)
 {
