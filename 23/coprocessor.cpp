@@ -1,6 +1,7 @@
 #include <coprocessor.hpp>
 
 #include <cassert>
+#include <cmath>
 #include <regex>
 #include <sstream>
 #include <string>
