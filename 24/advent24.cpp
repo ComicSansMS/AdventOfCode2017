@@ -1,4 +1,4 @@
-#include <coprocessor.hpp>
+#include <bridge_builder.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -37,29 +37,12 @@ int main(int argc, char* argv[])
     if(!input) {
         return 1;
     }
+    auto const ports = parseInput(*input);
+    auto const bridges = getBridges(ports);
 
-    auto const program = parseInput(*input);
-    CoprocessorVm vm;
-    executeProgram(vm, program);
+    std::cout << "First result is: " << getStrongestStrength(bridges) << std::endl;
 
-    std::cout << "First result is: " << vm.mul_count << std::endl;
-
-    CoprocessorVm vm2;
-    vm2.registers[0] = 1;
-    for(int i=0; i<8; ++i) {
-        executeInstruction(vm2, program[vm2.pc]);
-    }
-    
-    auto const lower_limit = vm2.registers[1];
-    auto const upper_limit = vm2.registers[2];
-    assert(upper_limit < std::numeric_limits<int>::max());
-    auto const s = sieve(static_cast<int>(upper_limit) + 1);
-
-    int res = 0;
-    for(int64_t b=lower_limit; b<=upper_limit; b+=17) {
-        if(s[b] == 0) { ++res; }
-    }
-    std::cout << "Second result is: " << res << std::endl;
+    std::cout << "Second result is: " << getLongestStrongestStrength(bridges) << std::endl;
 
     return 0;
 }
