@@ -2,6 +2,9 @@
 
 #include <bridge_builder.hpp>
 
+#include <algorithm>
+#include <vector>
+
 TEST_CASE("Bridge Builder")
 {
     char const* input = R"(0/2
