@@ -65,7 +65,7 @@ after_success:
         bash <(curl -s https://codecov.io/bash)
     fi
   - |
-    for i in `seq 1 24`;
+    for i in `seq 1 25`;
     do
       if (( $i < 10 )); then
           echo Result for day 0$i:
