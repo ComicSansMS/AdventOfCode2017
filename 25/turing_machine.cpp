@@ -119,7 +119,7 @@ int& Tape::operator[](int index)
         }
         return left[-(index + 1)];
     } else {
-        if(right.size() < index + 1) {
+        if(static_cast<int>(right.size()) < index + 1) {
             right.resize(index + 1);
         }
         return right[index];
